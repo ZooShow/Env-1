@@ -1,29 +1,43 @@
 #!/bin/bash
-ArgFail=0
-EnvFail=0
-File=""
-Location=""
 
-if [ -z $1 ] || [ -z $2 ]
+if [ -n "$a" ]
 then
-    ArgFail=1
+    f=1
+    n=$a
+
+    if (( n<0 ))
+    then
+        echo Факториал отрицательного числа не определен!
+    
+    else 
+        for (( i=1; i <= $n; ++i ))
+        do
+            f=$[ $f*$i ]
+        done
+        echo $f
+    fi
+
+    if [ -n "$1" ]
+    then
+
+        if [[ "$1" == "-S" ]]
+        then
+            if [[ $(file fact.txt) == "fact.txt: empty" ]]
+            then
+                cat /dev/null > fact.txt
+                echo $f > fact.txt
+            else 
+                touch fact.txt
+                echo $f > fact.txt
+            fi
+
+        elif [[ "$1" == "-F" ]]
+        then 
+            find 
+        else
+            echo Не верно указан второй параметр
+        fi
+    fi
 else
-    File=$1
-    Location=$2
+    echo Укажите число!
 fi
-
-if [ -z $EnvFile ] || [ -z $EnvLocation ]
-then
-    EnvFail=1
-else
-    File=$EnvFile
-    Location=$EnvLocation
-fi
-
-if [ $ArgFail -eq 1 ] && [ $EnvFail -eq 1 ]
-then
-    printf "usage: ./task.sh <file> <location> OR\n"
-    printf "usage: EnvFile=<file> EnvLocation=<location> ./task.sh\n"
-fi
-
-find $Location -name $File
